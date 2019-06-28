@@ -13,6 +13,7 @@ const passportSetup = require('./config/passport-setup')(dataHelpers);
 const getEventHandlers = require('./socket/events');
 const authRoutes    = require('./routes/auth-routes');
 const profileRoutes = require('./routes/profile-routes');
+var cors            = require('cors');
 const sharedsession = require("express-socket.io-session");
 const session       = cookieSession({
                         maxAge: 24 * 60 * 60 * 1000,
@@ -21,6 +22,7 @@ const session       = cookieSession({
 const model         = require('./model/model');
 console.log('model', model);
 app.use(session);
+app.use(cors());
 io.use(sharedsession(session, {autoSave: true}));
 // make io avialable in other file in request scope
 app.set('io', io);
@@ -41,7 +43,7 @@ io.on('connection', function(socket){
     // register attendee in model -> ability send real time notifications
     model.register(socket.handshake.session[0].id, socket.id);
     socket.emit('is_authorized', true);
-  } 
+  }
   let eventHandlers = getEventHandlers(io, model)
   for (var key in eventHandlers) {
     socket.on(key, eventHandlers[key]);

@@ -1,6 +1,6 @@
 const passport = require('passport');
 const LinkedInStrategy = require('passport-linkedin-oauth2').Strategy;
-require('dotenv').config(); 
+require('dotenv').config();
 
 let dataHelpers = null;
 
@@ -8,10 +8,10 @@ passport.serializeUser((user, done) => {
   done(null, user.id);
 });
 
-passport.deserializeUser((id, done) => 
+passport.deserializeUser((id, done) =>
   {
     dataHelpers.getUserById(id, (user) => done(null, user))
-  } 
+  }
 );
 
 const createUserProfile = function(profile){
@@ -33,7 +33,7 @@ const setUpLinkedinPassport = function (dataHelpersParam) {
       // options for google strategy
       clientID: process.env.LINKEDIN_CLIENT_ID,
       clientSecret: process.env.LINKEDIN_CLIENT_SECRET,
-      callbackURL: 'http://127.0.0.1:8081/auth/linkedin/callback'
+      callbackURL: 'http://smart-business-card.herokuapp.com/auth/linkedin/callback'
     }, (accessToken, refreshToken, profile, done) => {
       // passport callback function
       dataHelpers.getUserByToken(
